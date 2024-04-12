@@ -152,10 +152,7 @@ template devLog(req: ImpRequest, content: untyped) =
 template handleCompress(needCompress: bool; content: string; ctn: var string; length: var int) =
   if needCompress:
     headers.ContentEncoding "gzip"
-    try:
-      ctn = compress(content, BestSpeed, dfGzip)
-    except ZippyError:
-      
+    ctn = compress(content, BestSpeed, dfGzip)
     length = ctn.len
   else:
     when defined(gcArc) or defined(gcOrc):
