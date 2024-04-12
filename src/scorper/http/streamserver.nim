@@ -128,8 +128,8 @@ macro acceptMime*(req: ImpRequest, ext: untyped, headers: HttpHeaders, body: unt
     try:
       {.cast(gcsafe).}:
         r = req.server.privAccpetParser.match(accept, mimes)
-    except CancelledError as err:
-      await req.respError(Http500, err.msg, headers)
+    except CatchableError, Exception:
+      await req.respError(Http500, headers)
       return
     var ext {.inject.}: string
     if r.ok:
@@ -140,8 +140,7 @@ macro acceptMime*(req: ImpRequest, ext: untyped, headers: HttpHeaders, body: unt
     else:
       `body`
 
-func gzip*(req: ImpRequest): bool {.inline.} = GzipEnable and req.headers.hasKey("Accept-Encoding") and
-    string(req.headers["Accept-Encoding"]).contains("gzip")
+func gzip*(req: ImpRequest): bool {.inline.} = GzipEnable and req.headers.getOrDefault("Accept-Encoding").contains("gzip")
 
 template devLog(req: ImpRequest, content: untyped) =
   when not defined(release):
@@ -625,7 +624,7 @@ proc postCheck(req: ImpRequest): Future[int]{.async, inline.} =
   if req.meth in MethodNeedsBody and req.parsed == false:
     result = await req.reader.consume(req.contentLength.int)
 
-proc defaultErrorHandle(req: ImpRequest, err: ref Exception | HttpError; headers = newHttpHeaders()){.async: (raises: []), gcsafe.} =
+proc defaultErrorHandle(req: ImpRequest, err: ref Exception | HttpError; headers = newHttpHeaders()){.async, gcsafe.} =
   if req.responded:
     return
   let code = when err is HttpError: err.code.HttpCode else: Http500 #
