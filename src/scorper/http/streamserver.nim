@@ -804,12 +804,8 @@ template processClientImpl(isSecurity: bool): proc (server: StreamServer, transp
   proc processClient(server: StreamServer, transp: StreamTransport) {.async.} =
     var req = ImpRequest()
     req.headers = newHttpHeaders()
-    when defined(gcArc) or defined(gcOrc):
-      req.server = cast[Scorper](server)
-      req.transp = transp
-    else:
-      shallowCopy(req.server, cast[Scorper](server))
-      shallowCopy(req.transp, transp)
+    req.server = cast[Scorper](server)
+    req.transp = transp
     try:
       req.hostname = $req.transp.localAddress
     except TransportError:
