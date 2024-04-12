@@ -1,5 +1,5 @@
 import net, strutils, sequtils, urlly, parseutils, base64, os,
-  math, random, ./httpcore, times, tables, std/monotimes
+  math, random, ./httpcore, tables, std/monotimes
 import chronos, ./futurestream, asyncresponse, multipart
 import nativesockets
 export asyncresponse
@@ -45,7 +45,7 @@ type
     contentTotal: BiggestInt
     contentProgress: BiggestInt
     oneSecondProgress: BiggestInt
-    lastProgressReport: MonoTime
+    lastProgressReport: int64
     transp: StreamTransport
     getBody: bool               ## When `false`, the body is never read in requestAux.
     bodyStream: FutureStream[string]
@@ -183,13 +183,13 @@ proc reportProgress(client: AsyncHttpClient,
                     progress: BiggestInt) {.async.} =
   client.contentProgress += progress
   client.oneSecondProgress += progress
-  if (getMonoTime() - client.lastProgressReport).inSeconds > 1:
+  if (getMonoTime().ticks - client.lastProgressReport).nanoseconds.seconds > 1:
     if not client.onProgressChanged.isNil:
       await client.onProgressChanged(client.contentTotal,
                                      client.contentProgress,
                                      client.oneSecondProgress)
       client.oneSecondProgress = 0
-      client.lastProgressReport = getMonoTime()
+      client.lastProgressReport = getMonoTime().ticks
 
 
 proc recvFull(client: AsyncHttpClient, size: int, timeout: int,
@@ -283,7 +283,7 @@ proc parseBody(client: AsyncHttpClient, headers: HttpHeaders,
   client.contentTotal = 0
   client.contentProgress = 0
   client.oneSecondProgress = 0
-  client.lastProgressReport = MonoTime()
+  client.lastProgressReport = MonoTime().ticks
 
   assert(not client.bodyStream.finished)
 
@@ -357,7 +357,7 @@ proc parseResponse*(client: AsyncHttpClient,
       line = await client.reader.readLine()
     except CatchableError:
       line = ""
-      await sleepAsync(0)
+      await sleepAsync(0.milliseconds)
       continue
     if line == "":
       fullyRead = true
