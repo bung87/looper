@@ -17,6 +17,7 @@ requires "npeg"
 requires "zippy"
 requires "jsony"
 requires "urlly >= 0.2.0 & < 0.3.0"
+requires "ptr_math"
 
 
 task docs,"a":

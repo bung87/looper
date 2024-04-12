@@ -189,13 +189,13 @@ type
     middle
 
 template `+`[T](p: ptr T, off: int): ptr T =
-  cast[ptr type(p[])](cast[ByteAddress](p) +% off * sizeof(p[]))
+  cast[ptr type(p[])](cast[int](p) +% off * sizeof(p[]))
 
 template `+=`[T](p: ptr T, off: int) =
   p = p + off
 
 template `-`[T](p: ptr T, off: int): ptr T =
-  cast[ptr type(p[])](cast[ByteAddress](p) -% off * sizeof(p[]))
+  cast[ptr type(p[])](cast[int](p) -% off * sizeof(p[]))
 
 template `-`[T](p: ptr T, p2: ptr T): int =
   cast[int](p) - cast[int](p2)

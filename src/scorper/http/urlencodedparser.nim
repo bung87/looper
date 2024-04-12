@@ -1,5 +1,5 @@
 include ./constant
-import chronos
+import chronos,ptr_math
 
 type
   UrlEncodedParserState* = enum
@@ -32,12 +32,6 @@ proc needReadLen(parser: UrlEncodedParser): int {.inline.} =
 proc readOnce(parser: UrlEncodedParser): Future[int] {.async.} =
   result = await parser.transp.readOnce(parser.src[0].addr, nbytes = parser.needReadLen)
   parser.buf = parser.src[0].addr
-
-template `+`[T](p: ptr T, off: int): ptr T =
-  cast[ptr type(p[])](cast[ByteAddress](p) +% off * sizeof(p[]))
-
-template `+=`[T](p: ptr T, off: int) =
-  p = p + off
 
 proc resetSlices(parser: UrlEncodedParser) {.inline.} =
   parser.aSlice = default(Slice[int])

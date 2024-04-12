@@ -6,8 +6,8 @@ type
     None, Lax, Strict
 
 # name, value, Expires, Max-Age, Domain, Path, Secure, HttpOnly, SameSite
-proc makeCookie*(key, value, maxAge = "", expires = "", domain = "", path = "",
-                 secure = false, httpOnly = false,
+proc makeCookie*(key, value, maxAge, expires, domain, path:string;
+                 secure = false; httpOnly = false;
                  sameSite = Lax): string =
   # If both Expires and Max-Age are set, Max-Age has precedence.
   # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie
@@ -22,8 +22,8 @@ proc makeCookie*(key, value, maxAge = "", expires = "", domain = "", path = "",
   if sameSite != None:
     result.add("; SameSite=" & $sameSite)
 
-proc addCookie*(headers: HttpHeaders, name, value, maxAge = "", expires = "", domain = "", path = "",
-                 secure = false, httpOnly = false,
+proc addCookie*(headers: HttpHeaders, name, value, maxAge, expires, domain, path: string;
+                 secure = false; httpOnly = false;
                  sameSite = Lax) =
   # https://tools.ietf.org/html/draft-west-first-party-cookies-06
   headers.add("Set-Cookie", makeCookie(name, value, maxAge, expires, domain, path, secure, httpOnly, sameSite))

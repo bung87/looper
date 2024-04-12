@@ -6,7 +6,7 @@
 ## Copyright (c) 2020 Bung
 
 import streams, os, oids, strformat
-import chronos
+import chronos, ptr_math
 import parseutils, strutils # parseBoundary
 include ./ constant
 import ./sbmh 
@@ -51,12 +51,6 @@ proc `$`*(x: ContentDisposition): string =
     result = fmt"""{{"name":"{x.name}", "value": "{x.value}"}}"""
   elif x.kind == file:
     result = fmt"""{{"name":"{x.name}", "filename":"{x.filename}", "contentType": "{x.contentType}", "filepath": {x.filepath} }}"""
-
-template `+`[T](p: ptr T, off: int): ptr T =
-  cast[ptr type(p[])](cast[ByteAddress](p) +% off * sizeof(p[]))
-
-template `+=`[T](p: ptr T, off: int) =
-  p = p + off
 
 template debug(a: varargs[untyped]) =
   when defined(DebugMultipartParser):

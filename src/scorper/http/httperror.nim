@@ -6,7 +6,7 @@ type
     code*: HttpErrorCode
 
 proc newHttpError*(code: HttpErrorCode|HttpCode = 500.HttpErrorCode; msg = ""): HttpError =
-  new result
+  result = new HttpError
   result.code = code.HttpErrorCode
   if msg.len > 0:
     result.msg = msg
