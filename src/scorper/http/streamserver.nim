@@ -192,7 +192,7 @@ proc resp*(req: ImpRequest, content: sink string,
   await resp(req, content, headers.newHttpHeaders())
 
 proc respError*(req: ImpRequest, code: HttpCode, content: sink string, headers = newHttpHeaders()): Future[
-    void] {.async:(raises:[]).} =
+    void] {.async.} =
   ## Responds to the req with the specified ``HttpCode``.
   if req.responded == true:
     return
@@ -212,10 +212,10 @@ proc respError*(req: ImpRequest, code: HttpCode, content: sink string, headers =
   req.responded = true
 
 proc respError*(req: ImpRequest, code: HttpCode, content: sink string,
-              headers: seq[(string, string)]): Future[void] {.inline, async: (raises:[]).} =
+              headers: seq[(string, string)]): Future[void] {.inline, async.} =
   await respError(req, code, content, headers.newHttpHeaders())
 
-proc respError*(req: ImpRequest, code: HttpCode, headers = newHttpHeaders()): Future[void] {.async:(raises: []).} =
+proc respError*(req: ImpRequest, code: HttpCode, headers = newHttpHeaders()): Future[void] {.async.} =
   ## Responds to the req with the specified ``HttpCode``.
   if req.responded == true:
     return
