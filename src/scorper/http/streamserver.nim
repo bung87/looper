@@ -128,7 +128,7 @@ macro acceptMime*(req: ImpRequest, ext: untyped, headers: HttpHeaders, body: unt
     try:
       {.cast(gcsafe).}:
         r = req.server.privAccpetParser.match(accept, mimes)
-    except Exception as err:
+    except CancelledError as err:
       await req.respError(Http500, err.msg, headers)
       return
     var ext {.inject.}: string
