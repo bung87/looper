@@ -1,6 +1,6 @@
 # Package
 
-version       = "1.1.13"
+version       = "1.2.0"
 author        = "bung87"
 description   = "micro and elegant web framework"
 license       = "Apache License 2.0"
@@ -10,7 +10,7 @@ installExt = @["nim"]
 # namedbin = {"scorper/http/routermacros":"routermacros" }.toTable()
 # Dependencies
 
-requires "nim >= 1.3.1"
+requires "nim >= 1.6.0" # initial 1.3.1
 # requires "chronos >= 3.0.2" # initial 2.6.1
 requires "chronos"
 requires "npeg"

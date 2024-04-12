@@ -10,10 +10,7 @@ import mofuparser
 import npeg/codegen
 import urlencodedparser, multipartparser, acceptparser, rangeparser, oids, httpform, httpdate, httpcore, router,
     netunit, httperror
-when (NimMajor, NimMinor, NimPatch) >= (1, 6, 0): 
-  import std/mimetypes
-else:
-  import mimetypes
+import std/mimetypes
 import urlly
 include constant
 import std / [os, streams, options, strformat, json, sequtils, parseutils, strutils, macros, macrocache]
