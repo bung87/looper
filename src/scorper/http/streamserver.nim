@@ -624,7 +624,7 @@ proc postCheck(req: ImpRequest): Future[int]{.async, inline.} =
   if req.meth in MethodNeedsBody and req.parsed == false:
     result = await req.reader.consume(req.contentLength.int)
 
-proc defaultErrorHandle(req: ImpRequest, err: ref Exception | HttpError; headers = newHttpHeaders()){.async: (raises: []), gcsafe.} =
+proc defaultErrorHandle(req: ImpRequest, err: ref Exception | HttpError; headers = newHttpHeaders()){.async, gcsafe.} =
   if req.responded:
     return
   let code = when err is HttpError: err.code.HttpCode else: Http500 #
