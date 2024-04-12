@@ -152,7 +152,10 @@ template devLog(req: ImpRequest, content: untyped) =
 template handleCompress(needCompress: bool; content: string; ctn: var string; length: var int) =
   if needCompress:
     headers.ContentEncoding "gzip"
-    ctn = compress(content, BestSpeed, dfGzip)
+    try:
+      ctn = compress(content, BestSpeed, dfGzip)
+    except ZippyError:
+      
     length = ctn.len
   else:
     when defined(gcArc) or defined(gcOrc):
@@ -192,7 +195,7 @@ proc resp*(req: ImpRequest, content: sink string,
   await resp(req, content, headers.newHttpHeaders())
 
 proc respError*(req: ImpRequest, code: HttpCode, content: sink string, headers = newHttpHeaders()): Future[
-    void] {.async.} =
+    void] {.async:(raises:[]).} =
   ## Responds to the req with the specified ``HttpCode``.
   if req.responded == true:
     return
@@ -212,10 +215,10 @@ proc respError*(req: ImpRequest, code: HttpCode, content: sink string, headers =
   req.responded = true
 
 proc respError*(req: ImpRequest, code: HttpCode, content: sink string,
-              headers: seq[(string, string)]): Future[void] {.inline, async.} =
+              headers: seq[(string, string)]): Future[void] {.inline, async: (raises:[]).} =
   await respError(req, code, content, headers.newHttpHeaders())
 
-proc respError*(req: ImpRequest, code: HttpCode, headers = newHttpHeaders()): Future[void] {.async.} =
+proc respError*(req: ImpRequest, code: HttpCode, headers = newHttpHeaders()): Future[void] {.async:(raises: []).} =
   ## Responds to the req with the specified ``HttpCode``.
   if req.responded == true:
     return
@@ -624,7 +627,7 @@ proc postCheck(req: ImpRequest): Future[int]{.async, inline.} =
   if req.meth in MethodNeedsBody and req.parsed == false:
     result = await req.reader.consume(req.contentLength.int)
 
-proc defaultErrorHandle(req: ImpRequest, err: ref Exception | HttpError; headers = newHttpHeaders()){.async, gcsafe.} =
+proc defaultErrorHandle(req: ImpRequest, err: ref Exception | HttpError; headers = newHttpHeaders()){.async: (raises: []), gcsafe.} =
   if req.responded:
     return
   let code = when err is HttpError: err.code.HttpCode else: Http500 #

@@ -174,7 +174,7 @@ func getOrDefault*(headers: HttpHeaders, key: string,
   ## Returns the values associated with the given ``key``. If there are no
   ## values associated with the key, then ``default`` is returned.
   if headers.hasKey(key):
-    return headers.getOrDefault(headers.toCaseInsensitive(key))
+    return headers.table.getOrDefault(headers.toCaseInsensitive(key)).HttpHeaderValues
   else:
     return default
 
