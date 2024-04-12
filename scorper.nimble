@@ -10,7 +10,7 @@ installExt = @["nim"]
 # namedbin = {"scorper/http/routermacros":"routermacros" }.toTable()
 # Dependencies
 
-requires "nim >= 1.6.16" # initial 1.3.1
+requires "nim >= 1.6.18" # initial 1.3.1
 # requires "chronos >= 3.0.2" # initial 2.6.1
 requires "chronos"
 requires "npeg"
@@ -51,9 +51,6 @@ task bench_h,"benchmark simple responses with httpbeast":
   requires "httpbeast"
   exec "nim c -r -d:release --threads:on -d:port=7777 -d:demoPath=benchmark/simple_resp.nim benchmark/benchmark_resp.nim"
   exec "nim c -r -d:release --threads:on -d:port=6666 -d:demoPath=benchmark/simple_resp_httpbeast.nim benchmark/benchmark_resp.nim"
-
-task strict, "stric async exception check":
-  exec "nimble test -d:chronosStrictException"
 
 
 # before test:

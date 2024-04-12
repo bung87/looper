@@ -187,18 +187,6 @@ transformed, in order to catch any exceptions and transfer them to the `Future`.
 > Effectively, this means that while code can be compiled with
 `{.push raises: [Defect]}`, the intended effect propagation and checking is
 **disabled** for `async` functions.
->
-> To enable checking exception effects in `async` code, enable strict mode with
-**`-d:chronosStrictException`**.
->
-> In the strict mode, `async` functions are checked such that they only raise
-`CatchableError` and thus must make sure to explicitly specify exception
-effects on forward declarations, callbacks and methods using
-`{.raises: [CatchableError].}` (or more strict) annotations.
-
-See `chronos` [#Error handling](https://github.com/status-im/nim-chronos#error-handling) for more details.
-
-Use `-d:chronosStrictException` to enable strict mode as explained above.
 
 ## Todos  
 
