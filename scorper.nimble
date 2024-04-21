@@ -1,6 +1,6 @@
 # Package
 
-version       = "1.2.4"
+version       = "1.2.5"
 author        = "bung87"
 description   = "micro and elegant web framework"
 license       = "Apache License 2.0"
