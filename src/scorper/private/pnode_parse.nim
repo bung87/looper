@@ -1,12 +1,13 @@
 import ./mimport
-from os import nil
-mImport(os.joinPath( "compiler" , "parser.nim"))
-mImport(os.joinPath( "compiler" , "llstream.nim"))
-mImport(os.joinPath( "compiler" , "idents.nim"))
-mImport(os.joinPath( "compiler" , "options.nim"))
-mImport(os.joinPath( "compiler" , "pathutils.nim"))
-mImport(os.joinPath( "compiler" , "lineinfos.nim"))
-mImport(os.joinPath( "compiler" , "ast.nim"))
+import os
+# from os import nil
+import compiler / parser
+import compiler / llstream
+import compiler / idents
+import compiler / options
+import compiler / pathutils
+import compiler / lineinfos
+import compiler / ast
 export ast
 
 type ParseError = ref object of CatchableError
